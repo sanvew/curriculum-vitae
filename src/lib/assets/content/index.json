@@ -1,0 +1,104 @@
+[
+    {
+        "type": "Header",
+        "props": {
+            "name": "Andrew Nemov",
+            "headline": "Backend Engineer"
+        }
+    },
+    {
+        "type": "Section",
+        "props": {
+            "title": "Summery"
+        },
+        "children": {
+            "html": "<p class=\"text-default\"> Experienced web developer with a passion for creating responsive and user-friendly websites. Proficient in HTML, CSS, JavaScript, and various web development frameworks.</p>"
+        }
+    },
+    {
+        "type": "Section",
+        "props": {
+            "title": "Skills"
+        },
+        "children": {
+            "type": "SkillList",
+            "props": {
+                "skillsCategories": [
+                    {
+                        "title": "Frontend",
+                        "skills": [
+                            "HTML/CSS",
+                            "JavaScript",
+                            "React",
+                            "Node.js",
+                            "Responsive Web Design"
+                        ]
+                    },
+                    {
+                        "skills": ["Java", "PostgreSQL", "Linux"]
+                    }
+                ]
+            }
+        }
+    },
+    {
+        "type": "Section",
+        "props": {
+            "title": "Experience"
+        },
+        "children": {
+            "type": "Experience",
+            "props": {
+                "positionTitle": "Web Developer",
+                "company": "ABC Company",
+                "description": "Developed and maintained company website, implementing responsive design and optimizing performance. Collaborated with the design team to create visually appealing web pages.",
+                "skills": ["html", "css", "ts", "js"],
+                "startDate": "2024-07-01T00:00:00Z",
+                "endDate": "2025-11-01T00:00:00Z"
+            }
+        }
+    },
+    {
+        "type": "Section",
+        "props": {
+            "title": "Education"
+        },
+        "children": {
+            "type": "Edu",
+            "props": {
+                "title": "Bachelor of Science in Computer Science",
+                "titleLink": "https://example.com",
+                "subTitle": "ITMO",
+                "subTitleLink": "https://example.com",
+                "dates": "2025-06-01T00:00:00Z"
+            }
+        }
+    },
+    {
+        "type": "Section",
+        "props": {
+            "title": "Contact"
+        },
+        "children": {
+            "type": "ContactList",
+            "props": {
+                "contacts": [
+                    {
+                        "title": "Email",
+                        "value": "john.doe@example.com"
+                    },
+                    {
+                        "title": "LinkedIn",
+                        "value": "linkedin.com/in/johndoe",
+                        "valueLink": "https://www.linkedin.com/in/johndoe"
+                    },
+                    {
+                        "title": "Website",
+                        "value": "johndoe.com",
+                        "valueLink": "https://www.johndoe.com"
+                    }
+                ]
+            }
+        }
+    }
+]

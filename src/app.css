@@ -1,0 +1,25 @@
+@import 'tailwindcss';
+
+.headline-section {
+    @apply mt-4 mb-2 text-xl font-semibold;
+}
+
+.headline-entry {
+    @apply text-lg font-semibold;
+}
+
+.text-default {
+    @apply text-base text-gray-700;
+}
+
+.text-light {
+    @apply text-base text-gray-600;
+}
+
+.link {
+    @apply text-blue-500 hover:underline;
+}
+
+.link-symbol:after {
+    content: '🔗';
+}

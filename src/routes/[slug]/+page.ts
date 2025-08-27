@@ -1,8 +1,16 @@
-import { error } from '@sveltejs/kit';
-import type { Component } from 'svelte';
-import type { RenderComponent } from '$lib/components/Renderer.svelte';
+import type { EntryGenerator, PageLoad } from './$types';
 
-const componentPromise = (name: string) => {
+import type { Component } from 'svelte';
+import { error } from '@sveltejs/kit';
+
+import contentProvider from '$lib/content-provider.ts';
+
+export const prerender = true;
+export const entries: EntryGenerator = async () => {
+    return (await contentProvider.entries()).map((it) => ({ slug: it }));
+};
+
+const componentPromise = async (name: string) => {
     return import(`$lib/components/${name}.svelte`);
 };
 
@@ -18,14 +26,10 @@ const loadAndSetComponentsDeep = async (entry: object, loadedComponents: object)
     }
 };
 
-const contentById = async (id: string): object => {
-    return (await import(`$lib/assets/content/${id}.json`)).default;
-};
-
 export const load: PageLoad = async ({ params }) => {
-    let jsonContent;
+    let jsonContent = [];
     try {
-        jsonContent = await contentById(params.cv);
+        jsonContent = await contentProvider.byId(params.slug);
     } catch (err) {
         error(404, 'Not found');
     }

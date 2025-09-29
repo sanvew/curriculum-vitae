@@ -6,8 +6,11 @@ const config = {
     preprocess: vitePreprocess(),
     kit: {
         adapter: adapter(),
+        router: {
+            type: 'hash'
+        },
         paths: {
-            base: process.argv.includes('dev') ? '' : process.env.BASE_PATH
+            base: process.argv.includes('dev') ? '/dev' : process.env.BASE_PATH
         }
     }
 };

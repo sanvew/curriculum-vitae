@@ -1,24 +1,26 @@
 <script lang="ts" module>
     import { type Component } from 'svelte';
 
-    export interface RenderComponent {
+    export interface RenderComponentProps {
         type?: Component;
         html?: string;
         props?: object;
-        children?: RenderComponent;
+        children?: RenderComponentProps[];
     }
 </script>
 
 <script lang="ts">
     import Renderer from './Renderer.svelte';
 
-    let component: RenderComponent = $props();
+    let component: RenderComponentProps = $props();
 </script>
 
 {#if component.type}
     {#if component.children}
         <component.type {...component.props}>
-            <Renderer {...component.children} />
+            {#each component.children as child}
+                <Renderer {...child} />
+            {/each}
         </component.type>
     {:else}
         <component.type {...component.props} />

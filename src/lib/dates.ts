@@ -1,17 +1,9 @@
-const MONTHS: string[] = [
-    'Jan',
-    'Feb',
-    'Mar',
-    'Apr',
-    'May',
-    'June',
-    'July',
-    'Aug',
-    'Sep',
-    'Oct',
-    'Nov',
-    'Dec'
-];
+const MONTHS: string[] = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'June', 'July', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+
+export enum DateFormatType {
+    YEAR,
+    MONTH
+}
 
 export const dateParse = (date: string | Date): Date => {
     if (date instanceof Date) {
@@ -20,8 +12,23 @@ export const dateParse = (date: string | Date): Date => {
     return new Date(date);
 };
 
+export const formatDate = (date: Date, type: DateFormatType): string | null => {
+    switch (type) {
+        case DateFormatType.MONTH:
+            return dateFormatYearMonth(date);
+        case DateFormatType.YEAR:
+            return dateFormatYear(date);
+        default:
+            return null;
+    }
+};
+
 export const dateFormatYearMonth = (date: Date): string => {
     return `${MONTHS[date.getMonth()]} ${date.getFullYear()}`;
+};
+
+export const dateFormatYear = (date: Date): string => {
+    return `${date.getFullYear()}`;
 };
 
 export const dateDelta = (from: Date, to: Date): string => {

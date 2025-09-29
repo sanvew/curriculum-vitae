@@ -7,8 +7,13 @@
     let { data }: PageProps = $props();
 </script>
 
+<svelte:head>
+    {#if data.resume.meta?.title}
+        <title>{data.resume.meta?.title}</title>
+    {/if}
+</svelte:head>
 <CvContainer>
-    {#each data.content as item}
+    {#each data.resume.structure as item}
         <Renderer {...item} />
     {/each}
 </CvContainer>

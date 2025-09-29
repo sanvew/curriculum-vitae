@@ -13,15 +13,7 @@
 <script lang="ts">
     import { dateParse, dateFormatYearMonth, dateDelta } from '$lib/dates.ts';
 
-    let {
-        positionTitle = 'Position',
-        company = 'Company',
-        companyLink = 'https://example.com',
-        description = 'Position description',
-        skills,
-        startDate,
-        endDate
-    }: ExperienceProps = $props();
+    let { positionTitle, company, companyLink, description, skills, startDate, endDate }: ExperienceProps = $props();
 
     const parsedStartDate = dateParse(startDate);
     const parsedEndDate = endDate != null ? dateParse(endDate) : null;
@@ -50,9 +42,6 @@
         </p>
     {/if}
     <p class="text-light">
-        {startDateFmt}
-        -
-        {endDateFmt == null ? 'Present' : endDateFmt},
-        {deltaFmt}
+        {startDateFmt} - {endDateFmt == null ? 'Present' : endDateFmt}, {deltaFmt}
     </p>
 </div>

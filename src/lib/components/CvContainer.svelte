@@ -19,7 +19,7 @@
 
 <svelte:window on:afterprint={afterPrintPdf} />
 {#if hideForPrint == false}
-    <div class="container mx-auto px-4 py-8">
+    <div class="container mx-auto p-4">
         <div class="rounded-lg bg-white p-6 shadow-lg/20">
             {@render children()}
         </div>

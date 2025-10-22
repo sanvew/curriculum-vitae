@@ -50,6 +50,12 @@ export class FetchResumeProvider implements ResumeProvider {
 
     private async fetchByIdWithExtension(id: string, ext: AllowedResumeExtension): Promise<Resume | null> {
         return fetch(`${this.resumeStorageUrl}/${id}.${ext}`)
+            .then((it) => {
+                if (!it.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                return it;
+            })
             .then((it) => it.text())
             .then((it) => yamlParse(it));
     }

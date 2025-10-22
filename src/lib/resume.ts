@@ -1,4 +1,7 @@
 import type { Component } from 'svelte';
+import { parse as yamlParse } from 'yaml';
+
+import { PUBLIC_RESUME_STORAGE_BASE_URL, PUBLIC_RESUME_STORAGE_PREFIX } from '$env/static/public';
 
 export type ResumeEntry = {
     type?: string;
@@ -25,25 +28,71 @@ export interface ResumeProvider {
     byId(id: string): Promise<Resume | null>;
 }
 
-export class AssetsResumeProvider implements ResumeProvider {
+enum AllowedResumeExtension {
+    JSON = 'json',
+    YAML = 'yaml',
+    YML = 'yml'
+}
+
+export class FetchResumeProvider implements ResumeProvider {
+    private readonly resumeStorageUrl: URL;
+
+    constructor(resumeStorageUrl: URL) {
+        this.resumeStorageUrl = resumeStorageUrl;
+    }
+
     async byId(id: string): Promise<Resume | null> {
-        return import(`$lib/assets/content/${id}.json`)
-            .then(
-                (it) => it,
-                (_) => import(`$lib/assets/content/${id}.yaml`)
-            )
-            .then(
-                (it) => it,
-                (_) => import(`$lib/assets/content/${id}.yml`)
-            )
-            .then(
-                (it) => it.default,
-                (_) => null
-            );
+        return this.fetchByIdWithExtension(id, AllowedResumeExtension.YML)
+            .catch(() => this.fetchByIdWithExtension(id, AllowedResumeExtension.YAML))
+            .catch(() => this.fetchByIdWithExtension(id, AllowedResumeExtension.JSON))
+            .catch(() => null);
+    }
+
+    private async fetchByIdWithExtension(id: string, ext: AllowedResumeExtension): Promise<Resume | null> {
+        return fetch(`${this.resumeStorageUrl}/${id}.${ext}`)
+            .then((it) => it.text())
+            .then((it) => yamlParse(it));
     }
 }
 
-export const resumeProvider = new AssetsResumeProvider();
+const fetchResumeProvider = new FetchResumeProvider(
+    new URL(PUBLIC_RESUME_STORAGE_PREFIX, PUBLIC_RESUME_STORAGE_BASE_URL)
+);
+
+export class AssetsResumeProvider implements ResumeProvider {
+    async byId(id: string): Promise<Resume | null> {
+        return this.fetchByIdWithExtension(id, AllowedResumeExtension.YML)
+            .catch(() => this.fetchByIdWithExtension(id, AllowedResumeExtension.YAML))
+            .catch(() => this.fetchByIdWithExtension(id, AllowedResumeExtension.JSON))
+            .catch(() => null);
+    }
+
+    private async fetchByIdWithExtension(id: string, ext: AllowedResumeExtension): Promise<Resume | null> {
+        return import(`$lib/assets/content/${id}.${ext}`).then((it) => it.default);
+    }
+}
+
+const assetsResumeProvider = new AssetsResumeProvider();
+
+export class CompositResumeProvider implements ResumeProvider {
+    private readonly delegates: ResumeProvider[];
+
+    constructor(delegates: ResumeProvider[]) {
+        this.delegates = delegates;
+    }
+
+    async byId(id: string): Promise<Resume | null> {
+        for (const delegate of this.delegates) {
+            const resume = await delegate.byId(id);
+            if (resume != null) {
+                return resume;
+            }
+        }
+        return null;
+    }
+}
+
+export const resumeProvider = new CompositResumeProvider([fetchResumeProvider, assetsResumeProvider]);
 
 const componentPromise = async (name: string) => {
     return import(`$lib/components/${name}.svelte`);
